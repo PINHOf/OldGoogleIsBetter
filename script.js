@@ -26,11 +26,12 @@ function startObservingResults(cl)
 			return;
 
 		console.log('OldGoogleIsBetter: found search container');
-		
+
 		// Applies a class to the element
 		el.classList.add('old-google-is-better');
-		
+
 		beautifyResults(el);
+		removeImagesContainer(el);
 	});
 
 	const config = { subtree: true, childList: true };
@@ -50,39 +51,12 @@ function startObservingFeedback()
 			return;
 
 		console.log('OldGoogleIsBetter: found search feedback container');
-		
+
 		// Removes the entire feedback container
-		el.closest('.TzHB6b').remove();
-		
+		el.closest('.TzHB6b')?.remove();
+		el.remove();
+
 		console.log('OldGoogleIsBetter: removed search feedback container');
-		
-		observer.disconnect();
-	});
-
-	const config = { subtree: true, childList: true };
-	observer.observe(document, config);
-}
-
-// Starts observing the search results images container
-function startObservingImages()
-{
-	console.log('OldGoogleIsBetter: starting to observe images');
-
-	const observer = new MutationObserver(function(mutations)
-	{
-		const el = document.querySelector('[jsmodel="Wn3aEc"]');
-
-		if (!el)
-			return;
-
-		console.log('OldGoogleIsBetter: found search images container');
-		
-		// Removes the entire images container
-		el.closest('.TzHB6b').remove();
-		
-		console.log('OldGoogleIsBetter: removed search images container');
-		
-		observer.disconnect();
 	});
 
 	const config = { subtree: true, childList: true };
@@ -96,19 +70,17 @@ function startObservingRelated()
 
 	const observer = new MutationObserver(function(mutations)
 	{
-		const el = document.querySelector('.mgAbYb');
+		const el = document.getElementById('bres');
 
 		if (!el)
 			return;
 
 		console.log('OldGoogleIsBetter: found search related container');
-		
+
 		// Removes the entire related container
-		el.closest('.TzHB6b').remove();
-		
+		el.remove();
+
 		console.log('OldGoogleIsBetter: removed search related container');
-		
-		observer.disconnect();
 	});
 
 	const config = { subtree: true, childList: true };
@@ -119,13 +91,21 @@ function startObservingRelated()
 function beautifyResults(el)
 {
 	console.log('OldGoogleIsBetter: beautifying results');
-	
+
 	const url = getUrl(el);
-		
+
 	removeHeaderInformation(el);
 	removeUnnecessaryLineBreak(el);
-	adjustTitleMargin(el);
+	adjustTitle(el);
 	appendUrlAfterTitle(el, url);
+}
+
+function removeImagesContainer(el)
+{
+	const imgs = el.querySelector('img');
+	
+	if (imgs)
+		el.remove();
 }
 
 // Extracts the URL from the <a href> result
@@ -133,7 +113,7 @@ function getUrl(el)
 {
 	const linkEl = el.querySelector('a');
 	const url = linkEl ? linkEl.getAttribute('href') : '';
-	
+
 	console.log(`OldGoogleIsBetter: extracting url ${url}`);
 
 	return url;
@@ -144,7 +124,7 @@ function removeHeaderInformation(el)
 {
 	el.querySelectorAll('.TbwUpd').forEach((elem) => elem.remove());
 	el.querySelectorAll('.B6fmyf').forEach((elem) => elem.remove());
-	
+
 	console.log('OldGoogleIsBetter: removing header information');
 }
 
@@ -155,19 +135,22 @@ function removeUnnecessaryLineBreak(el)
 
 	if (link)
 		link.querySelectorAll('br').forEach((elem) => elem.remove());
-	
+
 	console.log('OldGoogleIsBetter: removing unecessary <br> tags');
 }
 
-// Adjusts the title margin top (after the header information has been removed from DOM)
-function adjustTitleMargin(el)
+// Adjusts the title style
+function adjustTitle(el)
 {
 	const titleEl = el.querySelector('.LC20lb');
 
 	if (titleEl)
+    {
 		titleEl.style.marginTop = '0px';
-	
-	console.log('OldGoogleIsBetter: adjusting title margin');
+        titleEl.style.fontSize = '19px';
+    }
+
+	console.log('OldGoogleIsBetter: adjusting title');
 }
 
 // Appends the URL after the title in a green color
@@ -189,7 +172,7 @@ function appendUrlAfterTitle(el, url)
 	   if (totalLinks == 1)
 		   titleParentEl.after(newEl);
 	}
-	
+
 	console.log('OldGoogleIsBetter: appending url after title');
 }
 
@@ -198,6 +181,5 @@ function appendUrlAfterTitle(el, url)
 	startObservingResults('.TzHB6b');
 	startObservingResults('.MjjYud');
 	startObservingFeedback();
-	startObservingImages();
 	startObservingRelated();
 })();
