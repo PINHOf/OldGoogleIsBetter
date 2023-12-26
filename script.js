@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OldGoogleIsBetter
 // @namespace    google
-// @version      0.2
+// @version      0.3
 // @description  Old google results is better
 // @author       PINHOf
 // @license      MIT
@@ -12,26 +12,25 @@
 // @run-at       document-start
 // ==/UserScript==
 
-
-// Starts observing the search results
-function startObservingResults(cl)
+function startObservingResults()
 {
 	console.log('OldGoogleIsBetter: starting to observe results');
 
 	const observer = new MutationObserver(function(mutations)
 	{
-		const el = document.querySelector(`${cl}:not(.old-google-is-better)`);
+		const el = document.querySelector('.LC20lb:not(.old-google-is-better)');
 
 		if (!el)
 			return;
 
-		console.log('OldGoogleIsBetter: found search container');
+        console.log('OldGoogleIsBetter: found search element');
+
+        const container = el.closest('.MjjYud') ?? el.closest('.TzHB6b');
 
 		// Applies a class to the element
 		el.classList.add('old-google-is-better');
 
-		beautifyResults(el);
-		removeImagesContainer(el);
+		beautifyResults(container);
 	});
 
 	const config = { subtree: true, childList: true };
@@ -87,32 +86,71 @@ function startObservingRelated()
 	observer.observe(document, config);
 }
 
+// Starts observing the search results images container
+function startObservingImages()
+{
+	console.log('OldGoogleIsBetter: starting to observe images');
+
+	const observer = new MutationObserver(function(mutations)
+	{
+		const el = document.querySelector('.EyBRub');
+
+		if (!el)
+			return;
+
+		console.log('OldGoogleIsBetter: found search images container');
+
+		// Removes the entire images container
+		el.remove();
+
+		console.log('OldGoogleIsBetter: removed search images container');
+	});
+
+	const config = { subtree: true, childList: true };
+	observer.observe(document, config);
+}
+
 // Beautifies all the results as old google
 function beautifyResults(el)
 {
 	console.log('OldGoogleIsBetter: beautifying results');
 
 	const url = getUrl(el);
+	
+	if (!url)
+		return;
 
 	removeHeaderInformation(el);
 	removeUnnecessaryLineBreak(el);
+    removeSideImage(el);
+    removeBottomLinks(el);
 	adjustTitle(el);
 	appendUrlAfterTitle(el, url);
 }
 
-function removeImagesContainer(el)
+// Removes the side image close to the result
+function removeSideImage(el)
 {
-	const imgs = el.querySelector('img');
+	const img = el.querySelector('img');
 	
-	if (imgs)
-		el.remove();
+	if (img)
+        img.parentElement.remove();
+}
+
+// Removes the bottom links close to the result
+function removeBottomLinks(el)
+{
+	const links = el.querySelector('.HiHjCd');
+	
+	if (links)
+        links.remove();
 }
 
 // Extracts the URL from the <a href> result
 function getUrl(el)
 {
-	const linkEl = el.querySelector('a');
-	const url = linkEl ? linkEl.getAttribute('href') : '';
+	let linkEl = el.querySelector('a');
+	let url = linkEl ? linkEl.getAttribute('href') : '';
 
 	console.log(`OldGoogleIsBetter: extracting url ${url}`);
 
@@ -178,8 +216,8 @@ function appendUrlAfterTitle(el, url)
 
 (function()
 {
-	startObservingResults('.TzHB6b');
-	startObservingResults('.MjjYud');
+	startObservingResults();
 	startObservingFeedback();
 	startObservingRelated();
+	startObservingImages();
 })();
