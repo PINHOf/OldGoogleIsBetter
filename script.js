@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OldGoogleIsBetter
 // @namespace    google
-// @version      0.3
+// @version      0.5
 // @description  Old google results is better
 // @author       PINHOf
 // @license      MIT
@@ -122,19 +122,9 @@ function beautifyResults(el)
 
 	removeHeaderInformation(el);
 	removeUnnecessaryLineBreak(el);
-    removeSideImage(el);
     removeBottomLinks(el);
 	adjustTitle(el);
 	appendUrlAfterTitle(el, url);
-}
-
-// Removes the side image close to the result
-function removeSideImage(el)
-{
-	const img = el.querySelector('img');
-	
-	if (img)
-        img.parentElement.remove();
 }
 
 // Removes the bottom links close to the result
