@@ -93,7 +93,7 @@ function startObservingImages()
 
 	const observer = new MutationObserver(function(mutations)
 	{
-		const el = document.querySelector('.EyBRub');
+		const el = document.querySelector('.ULSxyf');
 
 		if (!el)
 			return;
