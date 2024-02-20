@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OldGoogleIsBetter
 // @namespace    google
-// @version      0.6
+// @version      0.7
 // @description  Old google results is better
 // @author       PINHOf
 // @license      MIT
@@ -93,10 +93,13 @@ function startObservingImages()
 
 	const observer = new MutationObserver(function(mutations)
 	{
-		const el = document.querySelector('.ULSxyf');
+		const el = document.querySelector('.kb0PBd.cvP2Ce.LnCrMe.QgmGr');
 
 		if (!el)
 			return;
+
+        if (el.querySelector('img') == null)
+            return;
 
 		console.log('OldGoogleIsBetter: found search images container');
 
