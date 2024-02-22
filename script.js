@@ -119,7 +119,7 @@ function beautifyResults(el)
 	console.log('OldGoogleIsBetter: beautifying results');
 
 	const url = getUrl(el);
-	
+
 	if (!url)
 		return;
 
@@ -134,7 +134,7 @@ function beautifyResults(el)
 function removeBottomLinks(el)
 {
 	const links = el.querySelector('.HiHjCd');
-	
+
 	if (links)
         links.remove();
 }
@@ -155,6 +155,7 @@ function removeHeaderInformation(el)
 {
 	el.querySelectorAll('.TbwUpd').forEach((elem) => elem.remove());
 	el.querySelectorAll('.B6fmyf').forEach((elem) => elem.remove());
+    el.querySelector('.q0vns')?.remove();
 
 	console.log('OldGoogleIsBetter: removing header information');
 }
