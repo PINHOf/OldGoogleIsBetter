@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OldGoogleIsBetter
 // @namespace    google
-// @version      0.7
+// @version      0.8
 // @description  Old google results is better
 // @author       PINHOf
 // @license      MIT
